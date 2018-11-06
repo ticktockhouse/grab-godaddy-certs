@@ -1,0 +1,29 @@
+- name: Grab the certs from the api
+  uri:
+    url: "{{ godaddy_api_url_root }}/{{ cert_id }}/download" 
+    headers: 
+      Authorization: sso-key {{ godaddy_api_key }}:{{ godaddy_secret }}
+  register: godaddy_cert_download_response
+
+- debug:
+    var: godaddy_cert_download_response.json.pems.certificate
+
+- name: Template the bundle file
+  template:
+    src: apache-bundle.j2
+    dest: "{{ godaddy_cert_root_location }}/san-cert-bundle.crt"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart apache2
+
+- name: Template the certificate file
+  template:
+    src: apache-cert.j2
+    dest: "{{ godaddy_cert_root_location }}/san-cert.crt"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restart apache2

@@ -1,0 +1,4 @@
+godaddy_api_key: "{{ lookup('env', 'GODADDY_API_KEY') }}"
+godaddy_secret: "{{ lookup('pipe', 'pass show tokens/godaddy') }}"
+godaddy_api_url_root: "https://api.godaddy.com/v1/certificates"
+godaddy_cert_root_location: "/etc/pki/san-cert"
